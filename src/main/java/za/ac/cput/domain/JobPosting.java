@@ -1,15 +1,26 @@
 package za.ac.cput.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import java.util.Objects;
 
+@Entity
 public class JobPosting {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int jobId;          // Unique identifier for the job
     private String date;        // Date the job was posted
     private String jobTitle;    // Title of the job
     private String timeFrame;   // Time frame of the job (e.g., Full-Time, Part-Time)
     private String location;    // Job location
 
-    // Private constructor
+    // Default constructor required by JPA
+    protected JobPosting() {}
+
+    // Private constructor for Builder pattern
     private JobPosting(Builder builder) {
         this.jobId = builder.jobId;
         this.date = builder.date;
@@ -39,7 +50,7 @@ public class JobPosting {
         return location;
     }
 
-    // Override equals and hashCode for comparison
+    // Override equals and hashCode for proper comparison
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -57,7 +68,7 @@ public class JobPosting {
         return Objects.hash(jobId, date, jobTitle, timeFrame, location);
     }
 
-    // Override toString for readability
+    // Override toString for better readability
     @Override
     public String toString() {
         return "JobPosting{" +
@@ -69,7 +80,7 @@ public class JobPosting {
                 '}';
     }
 
-    // Builder class
+    // Builder class for creating JobPosting objects
     public static class Builder {
         private int jobId;
         private String date;

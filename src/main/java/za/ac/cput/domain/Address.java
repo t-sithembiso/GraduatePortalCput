@@ -1,27 +1,36 @@
 package za.ac.cput.domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+
 import java.util.Objects;
 
+@Entity
 public class Address {
-    private long addressId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int addressId;
     private String province;
     private String streetName;
     private String city;
     private int zipCode;
 
-    public Address(Builder builder) {
+    // Private constructor to enforce immutability and use Builder
+    private Address(Builder builder) {
         this.addressId = builder.addressId;
         this.province = builder.province;
-        this.streetName =builder.streetName;
-        this.city =builder.city;
+        this.streetName = builder.streetName;
+        this.city = builder.city;
         this.zipCode = builder.zipCode;
-
     }
 
+    // No-argument constructor required by JPA
+    protected Address() {}
 
-
-
-    public long getAddressId() {
+    // Getters
+    public int getAddressId() {
         return addressId;
     }
 
@@ -41,19 +50,26 @@ public class Address {
         return zipCode;
     }
 
+    // Overriding equals for object comparison
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Address address = (Address) o;
-        return addressId == address.addressId && zipCode == address.zipCode && Objects.equals(province, address.province) && Objects.equals(streetName, address.streetName) && Objects.equals(city, address.city);
+        return addressId == address.addressId &&
+                zipCode == address.zipCode &&
+                Objects.equals(province, address.province) &&
+                Objects.equals(streetName, address.streetName) &&
+                Objects.equals(city, address.city);
     }
 
+    // Overriding hashCode for hash consistency
     @Override
     public int hashCode() {
         return Objects.hash(addressId, province, streetName, city, zipCode);
     }
 
+    // Overriding toString for readability
     @Override
     public String toString() {
         return "Address{" +
@@ -64,14 +80,17 @@ public class Address {
                 ", zipCode=" + zipCode +
                 '}';
     }
-    public static class Builder{
-        private long addressId;
+
+    // Builder class for constructing Address objects
+    public static class Builder {
+        private int addressId;
         private String province;
         private String streetName;
         private String city;
         private int zipCode;
 
-        public Builder setAddressId(long addressId) {
+        // Setter methods for configuring the builder
+        public Builder setAddressId(int addressId) {
             this.addressId = addressId;
             return this;
         }
@@ -96,18 +115,19 @@ public class Address {
             return this;
         }
 
+        // Copy method for creating a builder based on an existing Address
         public Builder copy(Address address) {
             this.addressId = address.addressId;
             this.province = address.province;
-            this.streetName =address.streetName;
+            this.streetName = address.streetName;
             this.city = address.city;
             this.zipCode = address.zipCode;
             return this;
         }
 
-        public Address build(){
+        // Build method to create the Address object
+        public Address build() {
             return new Address(this);
         }
     }
-
 }

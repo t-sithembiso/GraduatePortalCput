@@ -1,9 +1,15 @@
 package za.ac.cput.domain;
 
-import java.sql.Blob;
+import jakarta.persistence.*;
+
+import java.util.Arrays;
 import java.util.Objects;
 
+@Entity
 public class Career {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int careerId;
     private String eventName;
     private String date;
@@ -11,8 +17,12 @@ public class Career {
     private String location;
     private String employers;
     private String description;
-    private Blob image;
 
+    @Lob
+    @Column(length = 1000000)
+    private byte[] image;  // Correct type for image data (byte[])
+
+    // Private constructor to enforce immutability and use Builder
     private Career(Builder builder) {
         this.careerId = builder.careerId;
         this.eventName = builder.eventName;
@@ -24,7 +34,10 @@ public class Career {
         this.image = builder.image;
     }
 
+    // No-argument constructor required by JPA
+    protected Career() {}
 
+    // Getters
     public int getCareerId() {
         return careerId;
     }
@@ -53,11 +66,11 @@ public class Career {
         return description;
     }
 
-    public Blob getImage() {
+    public byte[] getImage() {
         return image;
     }
 
-
+    // Overriding equals for object comparison
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -70,15 +83,18 @@ public class Career {
                 Objects.equals(location, career.location) &&
                 Objects.equals(employers, career.employers) &&
                 Objects.equals(description, career.description) &&
-                Objects.equals(image, career.image);
+                Arrays.equals(image, career.image);  // Compare image arrays
     }
 
+    // Overriding hashCode for hash consistency
     @Override
     public int hashCode() {
-        return Objects.hash(careerId, eventName, date, time, location, employers, description, image);
+        int result = Objects.hash(careerId, eventName, date, time, location, employers, description);
+        result = 31 * result + Arrays.hashCode(image);  // Include image in hashCode
+        return result;
     }
 
-
+    // Overriding toString for readability
     @Override
     public String toString() {
         return "Career{" +
@@ -89,10 +105,11 @@ public class Career {
                 ", location='" + location + '\'' +
                 ", employers='" + employers + '\'' +
                 ", description='" + description + '\'' +
-                ", image=" + image +
+                ", image=" + Arrays.toString(image) +  // Display image as array string
                 '}';
     }
 
+    // Builder class for constructing Career objects
     public static class Builder {
         private int careerId;
         private String eventName;
@@ -101,8 +118,9 @@ public class Career {
         private String location;
         private String employers;
         private String description;
-        private Blob image;
+        private byte[] image;  // Use byte[] instead of Byte[]
 
+        // Setter methods for configuring the builder
         public Builder setCareerId(int careerId) {
             this.careerId = careerId;
             return this;
@@ -138,23 +156,12 @@ public class Career {
             return this;
         }
 
-        public Builder setImage(Blob image) {
+        public Builder setImage(byte[] image) {  // Accept byte[] image here
             this.image = image;
             return this;
         }
 
-        public Builder copy(Career career) {
-            this.careerId = career.careerId;
-            this.eventName = career.eventName;
-            this.date = career.date;
-            this.time = career.time;
-            this.location = career.location;
-            this.employers = career.employers;
-            this.description = career.description;
-            this.image = career.image;
-            return this;
-        }
-
+        // Build method to create the Career object
         public Career build() {
             return new Career(this);
         }

@@ -1,15 +1,22 @@
 package za.ac.cput.domain;
 
-import java.util.Objects;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 
+import java.util.Objects;
+@Entity
 public class Contact {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int contactId;
-    private int phoneNumber;
+    private int phoneNumber; // Corrected attribute name
     private String email;
 
     private Contact(Builder builder) {
         this.contactId = builder.contactId;
-        this.phoneNumber = builder.contactNumber;
+        this.phoneNumber = builder.phoneNumber;
         this.email = builder.email;
     }
 
@@ -19,7 +26,7 @@ public class Contact {
         return contactId;
     }
 
-    public int getContactNumber() {
+    public int getPhoneNumber() { // Corrected method name
         return phoneNumber;
     }
 
@@ -46,14 +53,14 @@ public class Contact {
     public String toString() {
         return "Contact{" +
                 "contactId=" + contactId +
-                ", contactNumber=" + phoneNumber +
+                ", phoneNumber=" + phoneNumber +
                 ", email='" + email + '\'' +
                 '}';
     }
 
     public static class Builder {
         private int contactId;
-        private int contactNumber; // Corrected naming
+        private int phoneNumber; // Aligned with the class attribute name
         private String email;
 
         public Builder setContactId(int contactId) {
@@ -61,8 +68,8 @@ public class Contact {
             return this;
         }
 
-        public Builder setContactNumber(int contactNumber) {
-            this.contactNumber = contactNumber;
+        public Builder setPhoneNumber(int phoneNumber) { // Aligned with class attribute name
+            this.phoneNumber = phoneNumber;
             return this;
         }
 
@@ -73,7 +80,7 @@ public class Contact {
 
         public Builder copy(Contact contact) {
             this.contactId = contact.contactId;
-            this.contactNumber = contact.phoneNumber; // Corrected reference
+            this.phoneNumber = contact.phoneNumber;
             this.email = contact.email;
             return this;
         }
