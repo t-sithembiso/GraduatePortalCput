@@ -11,7 +11,7 @@ public class Contact {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int contactId;
-    private int phoneNumber; // Corrected attribute name
+    private int phoneNumber;
     private String email;
 
     private Contact(Builder builder) {
