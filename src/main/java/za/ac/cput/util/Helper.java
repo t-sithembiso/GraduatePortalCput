@@ -31,6 +31,9 @@ public class Helper {
         return false;
 
     }
+    public static boolean isInvalidId(int id) {
+        return id <= 0;
+    }
 
 
     public static Boolean isIntegerNotValid(Integer integer){
